@@ -1,0 +1,22 @@
+package model;
+
+import java.io.Serializable;
+
+public class PatientDailyHealth implements Serializable{
+	private String patientId;
+	private int diastolicBP;
+	private int systolicBP;
+	private double heartRate;
+	
+	public String getPatientId(){
+		
+		
+	}
+	
+	public void setPatientId(){
+		
+	}
+	
+	public int 
+
+}
