@@ -1,0 +1,103 @@
+#===================================
+# Rules on blood pressure
+#===================================
+# measure systolic and diastolic every morning :
+
+# Hypertensive Crisis :
+case ( systolic  >= 180 && diastolic >= 110 ) :
+if bp lasted like this for at least half a day?
+
+	alert patient that his current blood pressure is critical & he better go hospital immediately if he doesn't want to die
+	alert doctor that patient is "hypertensive crisis" & award patient immediately for emergency care
+
+# Hypertension Stage 2 :
+case ( systolic  >= 160 && diastolic >= 100 ) :
+if bp lasted like this for at least 2 days?
+
+	alert patient that his current blood pressure is getting dangerously high & he better bloody do something about it if he doesn't want to die
+	alert doctor that patient is "hypertension stage 2" & trigger urgent follow-up
+
+# Hypertension Stage 1 :
+case ( systolic  >= 140 && diastolic >= 90 ) :
+if bp lasted like this for 3 consecutive days?
+	alert patient that his blood pressure is getting higher & he better do something about it!
+	alert doctor that patient is "hypertension stage 1" & trigger more frequent follow-up
+
+#Prehypertension :
+case ( systolic  >= 120 && diastolic >= 80 ) :
+if bp lasted like this for 3 consecutive days
+	alert patient on his current blood pressure & what should be the healthy range
+	alert doctor that patient is "prehypertension" & to start monitoring patient
+
+#Normal :
+case ( systolic  < 120 && diastolic < 80 ) :
+	praise patient? award "badges" after every week of good blood pressure?
+	
+#===================================
+# Rules on medication, simplify to :
+#====================================
+# medication to be taken once a day every morning.
+# and if patient skip medication for >= 2 days per week, will alert doctor.
+# pillBoxDay = 1 each time pill box open, reset to 0 at end of the day
+# daysWithoutMed = ++1 each time pillBoxDay = 0 at end of the day, daysWithoutMed reset to 0 at end of week
+
+# send reminder 2x a day if patient never take medication :
+If ( time == 12pm && pillBoxDay == 0 )
+	alert patient to take medication
+If ( time == 6pm && pillBoxDay == 0 )
+	alert patient to take medication - 2nd time!
+
+If ( time == 11:59pm && pillBoxDay ==0 )
+	daysWithoutMed = ++1
+	pillBoxDay = 0;
+	
+If ( daysWithoutMed >= 2 )
+	send alert to both patient & doctor
+
+#===================================
+# Rules on heart rate zone
+#===================================
+# A normal resting heart rate for adults ranges from 60 to 100 beats a minute.
+# If it is consistently high >=100 per min, then it indicates an underlying problem.
+# If a person is exercising, his target heart-rate zone needs to be within 
+# 50% and 85% of one's maximum heart rate. 
+# max heart rate = 220 - age
+
+maxHR = 220 - age;
+minHRZone = 0.5 * maxHR
+maxHRZone = 0.85 * maxHR
+
+# detect heartRate every 15 mins?
+# store in tuple : (dateTimeStamp, HR)
+prevHR = heartRate(6:45am)  #returns heartRate taken at 6:45am
+tmpTime = 0 mins
+
+For (time <- 7am to 11pm; loop every 15mins)
+{
+
+	If (currHR > 100)
+	{
+		tmpTime = tmpTime + 15mins
+		
+		#if currHR > 100 we assume patient has started exercising...
+		#If he's exercising, his currentHR should be < maxHR, otherwise dangerous!
+		#Or if heartrate is consistently > 100 for more than an hr, then dangerous!
+
+		if ( (currHR > maxHRZone) or (tmpTime > 60mins) )
+			alert patient on his excessive heart rate, ask him not to over exert!
+			display his target zone (minHRZone, maxHRZone)
+			and if he's not exercising currently, he should see a doctor immediately!
+		
+	}
+	else
+	{
+		#reset to zero if heart rate <= 100
+		tmpTime = 0; 
+	}
+	
+}  
+
+
+
+
+	
