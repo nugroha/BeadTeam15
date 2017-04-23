@@ -1,3 +1,10 @@
+'''
+This program creates mock data for patient and uses Spark streaming to ingest the data into hdfs.
+
+History : 
+
+'''
+
 import time
 import datetime
 import random
