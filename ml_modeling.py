@@ -3,8 +3,6 @@
 This program retrieve data from hdfs and perform prediction on the probability of the "Risk of heart diseases"
 using OLS Regression.
 
-Created on Fri Apr 21 20:59:42 2017
-
 @author: ongby
 """
 
